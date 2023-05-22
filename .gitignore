@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/RestClient/.vs
+/RestClient/RestClient/bin
+/RestClient/RestClient/obj
+/RestServer/.vs
+/RestServer/RestServer/bin
+/RestServer/RestServer/obj

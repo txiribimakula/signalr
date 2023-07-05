@@ -1,4 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using System.Reflection.PortableExecutable;
+using System.Text.Json.Serialization;
+using System.Threading.Channels;
 
 namespace RestServer.Controllers
 {
@@ -6,49 +10,69 @@ namespace RestServer.Controllers
     [Route("[controller]")]
     public class WeatherForecastController : ControllerBase
     {
-        private static readonly string[] Summaries = new[]
-        {
-        "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-    };
-
+        private readonly ChannelWriter<Message> _channelWriter;
+        private readonly ChannelReader<Message> _channelReader;
         private readonly ILogger<WeatherForecastController> _logger;
 
-        public WeatherForecastController(ILogger<WeatherForecastController> logger)
+        public WeatherForecastController(ILogger<WeatherForecastController> logger,
+            ChannelWriter<Message> channelWriter,
+            ChannelReader<Message> channelReader)
         {
             _logger = logger;
+            _channelWriter = channelWriter;
+            _channelReader = channelReader;
         }
-
-        [HttpGet(Name = "GetWeatherForecast")]
-        public IEnumerable<WeatherForecast> Get()
-        {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
-            {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
-            })
-            .ToArray();
-        }
-
 
         [HttpGet("SSE")]
         public async Task GetSseAsync()
         {
-            var response = Response;
-            response.Headers.Add("Content-Type", "text/event-stream");
+            Response.Headers.Add("Content-Type", "application/x-ndjson");
 
-            for (var i = 0; i < 2; ++i)
+            //for (var i = 0; i < 2; ++i)
+            //{
+            //    await response
+            //        .WriteAsJsonAsync(new TestData());
+            //        // .WriteAsync($"data: Controller {i} at {DateTime.Now}\r\r");
+
+            //    await Task.Delay(5 * 1000);
+            //}
+
+            CancellationTokenSource cts = new CancellationTokenSource();
+            CancellationToken token = cts.Token;
+
+            _ = Task.Run(async () =>
             {
-                await response
-                    .WriteAsync($"data: Controller {i} at {DateTime.Now}\r\r");
+                while (true)
+                {
+                    await Response.WriteAsync(JsonConvert.SerializeObject(new Message() { Data = "WIP" }) + "\n");
+                    await Task.Delay(10 * 1000);
+                }
+            }, token);
 
-                await Task.Delay(5 * 1000);
-            }
+            _ = Task.Run(async () =>
+            {
+                while (await _channelReader.WaitToReadAsync(token))
+                {
+                    if (_channelReader.TryRead(out var msg))
+                    {
+                        Console.WriteLine(msg.Data);
+                        await Response.WriteAsync(JsonConvert.SerializeObject(msg) + "\n");
+                    }
+                }
+            }, token);
 
-            await response
-                .WriteAsync("Request ended!");
+            await Task.Delay(30 * 1000);
 
-            await response.Body.FlushAsync();
+            cts.Cancel();
+
+            await Response.Body.FlushAsync();
         }
+
+        [HttpPost("write")]
+        public async Task WriteAsync(Message msg)
+        {
+            await _channelWriter.WriteAsync(msg);
+        }
+
     }
 }

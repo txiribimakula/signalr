@@ -1,5 +1,4 @@
-using RestServer;
-using System.Threading.Channels;
+using SignalRTest.Hubs;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,9 +9,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddSingleton(Channel.CreateUnbounded<Message>());
-builder.Services.AddSingleton(svc => svc.GetRequiredService<Channel<Message>>().Reader);
-builder.Services.AddSingleton(svc => svc.GetRequiredService<Channel<Message>>().Writer);
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -28,5 +25,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<TestHub>("/hubs/testcount");
 
 app.Run();

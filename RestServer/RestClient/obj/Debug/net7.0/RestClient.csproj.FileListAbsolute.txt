@@ -1,0 +1,15 @@
+C:\repos\rest-playground\RestServer\RestClient\bin\Debug\net7.0\RestClient.exe
+C:\repos\rest-playground\RestServer\RestClient\bin\Debug\net7.0\RestClient.deps.json
+C:\repos\rest-playground\RestServer\RestClient\bin\Debug\net7.0\RestClient.runtimeconfig.json
+C:\repos\rest-playground\RestServer\RestClient\bin\Debug\net7.0\RestClient.dll
+C:\repos\rest-playground\RestServer\RestClient\bin\Debug\net7.0\RestClient.pdb
+C:\repos\rest-playground\RestServer\RestClient\obj\Debug\net7.0\RestClient.csproj.AssemblyReference.cache
+C:\repos\rest-playground\RestServer\RestClient\obj\Debug\net7.0\RestClient.GeneratedMSBuildEditorConfig.editorconfig
+C:\repos\rest-playground\RestServer\RestClient\obj\Debug\net7.0\RestClient.AssemblyInfoInputs.cache
+C:\repos\rest-playground\RestServer\RestClient\obj\Debug\net7.0\RestClient.AssemblyInfo.cs
+C:\repos\rest-playground\RestServer\RestClient\obj\Debug\net7.0\RestClient.csproj.CoreCompileInputs.cache
+C:\repos\rest-playground\RestServer\RestClient\obj\Debug\net7.0\RestClient.dll
+C:\repos\rest-playground\RestServer\RestClient\obj\Debug\net7.0\refint\RestClient.dll
+C:\repos\rest-playground\RestServer\RestClient\obj\Debug\net7.0\RestClient.pdb
+C:\repos\rest-playground\RestServer\RestClient\obj\Debug\net7.0\RestClient.genruntimeconfig.cache
+C:\repos\rest-playground\RestServer\RestClient\obj\Debug\net7.0\ref\RestClient.dll
